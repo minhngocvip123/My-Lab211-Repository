@@ -25,8 +25,23 @@ public class Fresher extends Candidate {
             return this.value;
         }
 
+        public static GraduationRank getRankByInt(int type) {
+            switch (type) {
+                case 0:
+                    return Excellence;
+                case 1:
+                    return Good;
+                case 2:
+                    return Fair;
+                case 3:
+                    return Poor;
+                default:
+                    throw new IllegalArgumentException("Invalid graduation rank value: " + type);
+            }
+        }
+
     }
-    private String graduationDate;
+    private int graduationDate;
     private GraduationRank graduationRank;
     private String education;
 
@@ -34,18 +49,18 @@ public class Fresher extends Candidate {
         super();
     }
 
-    public Fresher(String graduationDate, GraduationRank graduationRank, String education, int id, String firstName, String lastName, int birthDate, String address, String phone, String email, CandidateType candidateType) {
+    public Fresher(int graduationDate, GraduationRank graduationRank, String education, int id, String firstName, String lastName, int birthDate, String address, String phone, String email, CandidateType candidateType) {
         super(id, firstName, lastName, birthDate, address, phone, email, candidateType);
         this.graduationDate = graduationDate;
         this.graduationRank = graduationRank;
         this.education = education;
     }
 
-    public String getGraduationDate() {
+    public int getGraduationDate() {
         return graduationDate;
     }
 
-    public void setGraduationDate(String graduationDate) {
+    public void setGraduationDate(int graduationDate) {
         this.graduationDate = graduationDate;
     }
 
@@ -64,6 +79,5 @@ public class Fresher extends Candidate {
     public void setEducation(String education) {
         this.education = education;
     }
-    
-    
+
 }

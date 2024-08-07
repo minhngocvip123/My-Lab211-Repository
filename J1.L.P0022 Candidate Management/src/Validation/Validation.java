@@ -4,6 +4,7 @@
  */
 package Validation;
 
+import Entity.Candidate;
 import Exception.NumberNotInRangeException;
 import Exception.StringEmptyException;
 import Exception.StringNotMatchRegexException;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,8 +22,8 @@ import java.time.format.DateTimeParseException;
 public class Validation {
 
     //Name pattern that matches names that start with a letter and can contain 
-    //letters, digits, underscores, spaces, periods, single quotes, and commas
-    public static final String NAME_PATTERN = "^[a-zA-Z][\\w .',]+$";
+    //letters, underscores, spaces, periods, single quotes, and commas
+    public static final String NAME_PATTERN = "^[a-zA-Z][a-zA-Z .',]+$";
     //This pattern matches a phone number that starts with '0' followed by exactly 9 digits
     public static final String PHONE_PATTERN = "^[0][0-9]{9}$";
     //This pattern matches an email address that starts with a letter, followed 
@@ -223,5 +225,32 @@ public class Validation {
                 min,
                 max
         );
+    }
+
+    public boolean checkIdExist(ArrayList<Candidate> candidates, int id) {
+        for (Candidate candidate : candidates) {
+            if(candidate.getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    //check user input yes/no
+    public boolean checkInputYN(String msg) {
+        //loop until user input correct
+        while (true) {
+            String result = getString(msg);
+            //return true if user input y/Y
+            if (result.equalsIgnoreCase("Y")) {
+                return true;
+            }
+            //return false if user input n/N
+            if (result.equalsIgnoreCase("N")) {
+                return false;
+            }
+            System.err.println("Please input y/Y or n/N.");
+            System.out.print("Enter again: ");
+        }
     }
 }

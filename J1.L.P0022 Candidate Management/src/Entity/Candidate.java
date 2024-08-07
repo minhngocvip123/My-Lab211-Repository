@@ -118,7 +118,7 @@ public class Candidate {
     public String toString() {
         return this.firstName + " " + this.lastName + " | " + this.birthDate 
                 + " | " + this.address + " | " + this.phone + " | " 
-                + this.email + " | " + this.candidateType;
+                + this.email + " | " + this.candidateType.getValue();
     }
     
 }
