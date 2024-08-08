@@ -5,7 +5,6 @@
 package Manager;
 
 import Entity.Fruit;
-import Entity.OrderDetail;
 import Validation.Validation;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -96,10 +95,29 @@ public class Manager {
         }
     }
 
+    /**
+     * Method to handle displaying orders
+     */
     public void viewOrders() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //check if there are no orders
+        if(orders.isEmpty()){
+            System.err.println("No orders!");
+            return;
+        }
+        //iterate through each entry in the hashtable
+        //assign current key as name and iterate through each key with 
+        //keySet() method to find the key-value pair
+        for(String name : orders.keySet()){
+            System.out.println("Customer: " + name);
+            ArrayList<Fruit> listOrder = orders.get(name);
+            displayListOrder(listOrder);
+        }
+        
     }
 
+    /**
+     * Method to handle shopping process
+     */
     public void shop() {
         //list to save all orders
         ArrayList<Fruit> listOrder = new ArrayList<>();
@@ -141,10 +159,11 @@ public class Manager {
         //display list order
         displayListOrder(listOrder);
         String customerName = validation.getString("Input your name: ");
-        //map customer name to the order
+        //map customer name to the order and add to the hashtable
         orders.put(customerName, listOrder);
     }
-
+    
+    //method to display all fruits in the list
     public void displayListOfFruit(ArrayList<Fruit> listFruit) {
         if (listFruit.isEmpty()) {
             System.err.println("No fruits available!");
@@ -163,7 +182,8 @@ public class Manager {
             }
         }
     }
-
+    
+    //method to find fruit by id
     public Fruit getFruitById(int id) {
         for (Fruit fruit : listFruit) {
             if (fruit.getId() == id) {
@@ -172,7 +192,8 @@ public class Manager {
         }
         return null;
     }
-
+    
+    //method to check if fruit is already in the order list
     public Fruit checkFruitInOrder(ArrayList<Fruit> listOrder, int id) {
         for (Fruit fruit : listOrder) {
             if (fruit.getId() == id) {
@@ -181,7 +202,8 @@ public class Manager {
         }
         return null;
     }
-
+    
+    //method to display order
     private void displayListOrder(ArrayList<Fruit> listOrder) {
         double total = 0;
         System.out.printf("%-20s%-15s%-15s%-10s\n", "Product", "Quantity", "Price", "Amount");
