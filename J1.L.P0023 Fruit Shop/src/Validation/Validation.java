@@ -4,6 +4,7 @@
  */
 package Validation;
 
+import Entity.Fruit;
 import Exception.NumberNotInRangeException;
 import Exception.StringEmptyException;
 import Exception.StringNotMatchRegexException;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 /**
  *
@@ -88,7 +90,7 @@ public class Validation {
         // Loop until get right format number
         while (true) {
             try {
-                System.out.println(msg);
+                System.out.print(msg);
                 double result = Double.parseDouble(input.readLine().trim());
                 if (result < min || result > max) {
                     throw new NumberNotInRangeException("Invalid input, number must be in range [" + min + ", " + max + "]");
@@ -241,5 +243,13 @@ public class Validation {
             System.err.println("Please input y/Y or n/N.");
             System.out.print("Enter again: ");
         }
+    }
+    
+    //check if id exists
+    public boolean checkIdExist(ArrayList<Fruit> listFruit, int id) {
+        for (Fruit fruit : listFruit) {
+            if(fruit.getId() == id) return true;
+        }
+        return false;
     }
 }

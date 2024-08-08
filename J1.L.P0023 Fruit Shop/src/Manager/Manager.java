@@ -40,7 +40,60 @@ public class Manager {
     }
 
     public void createFruit() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //list to display fruits created
+        ArrayList<Fruit> newFruits = new ArrayList<>();
+        while (true) {
+            //testing
+            displayListOfFruit(listFruit);
+            
+            int id = validation.getInt("Enter Id: ");
+            String name;
+            //check id
+            if (validation.checkIdExist(listFruit, id)) {
+                //if id is taken, update quantity of fruit instead
+                System.out.println("Fruit with this Id(" + id + ") already exist: " + getFruitById(id).getName());
+                System.out.println("Update this fruit quantity instead.");
+                //quantity cannot be negative number
+                int quantity = validation.getInt("Enter quantity: ", 0, Integer.MAX_VALUE);
+                //increase the quantity of stock of the fruit
+                addQuantity(id, quantity, listFruit);
+                Fruit selectedFruit = getFruitById(id);
+                //add updated fruit into created fruit list
+                if (!checkFruitExist(selectedFruit.getName(), newFruits)) {
+                    //if fruit is not already in add list, add fruit into add list
+                    newFruits.add(new Fruit(selectedFruit.getId(), selectedFruit.getName(), 
+                            selectedFruit.getPrice(), quantity, selectedFruit.getOrigin()));
+                } else {
+                    //if already in the list, increase quantity
+                    addQuantity(id, quantity, newFruits);
+                }
+                System.out.println("Fruit quantity added successfully!");
+            //if id is not taken, create new fruit
+            } else {
+                //check fruit name
+                while (true) {
+                    name = validation.getString("Enter fruit name: ");
+                    if (checkFruitExist(name, listFruit)) {
+                        System.err.println("This fruit is already created. Please enter a different name.");
+                    } else {
+                        break;
+                    }
+                }
+                double price = validation.getDouble("Enter price: ");
+                int quantity = validation.getInt("Enter quantity: ");
+                String origin = validation.getString("Enter origin: ");
+                newFruits.add(new Fruit(id, name, price, quantity, origin));
+                listFruit.add(new Fruit(id, name, price, quantity, origin));
+                System.out.println("Fruit created successfully!");
+            }
+
+            //if user want to stop adding, break the loop and return to menu
+            if (!validation.checkInputYN("Do you want to continue (Y/N)?")) {
+                System.out.println("List of fruits created/restocked: ");
+                displayListOfFruit(newFruits);
+                break;
+            }
+        }
     }
 
     public void viewOrders() {
@@ -52,7 +105,7 @@ public class Manager {
         ArrayList<Fruit> listOrder = new ArrayList<>();
         while (true) {
             //display fruit catalogues
-            displayListOfFruit();
+            displayListOfFruit(listFruit);
             Fruit selectedFruit;
             //get selection input from user. Loop until id input is valid
             while (true) {
@@ -92,16 +145,20 @@ public class Manager {
         orders.put(customerName, listOrder);
     }
 
-    public void displayListOfFruit() {
+    public void displayListOfFruit(ArrayList<Fruit> listFruit) {
         if (listFruit.isEmpty()) {
             System.err.println("No fruits available!");
         } else {
-            System.out.printf("%-10s%-20s%-15s%-15s\n", "Item", "Fruit Name", "Origin", "Price");
+            System.out.printf("%-10s%-20s%-15s%-15s%-15s\n", "Item", "Fruit Name", "Origin", "Quantity", "Price");
             for (Fruit fruit : listFruit) {
                 //do not print out fruits with 0 quantity
                 if (fruit.getQuantity() > 0) {
-                    System.out.printf("%-10s%-20s%-15s%-15s\n", fruit.getId(),
-                            fruit.getName(), fruit.getOrigin(), fruit.getPrice() + "$");
+                    System.out.printf("%-10s%-20s%-15s%-15s%-15s\n", 
+                            fruit.getId(),
+                            fruit.getName(), 
+                            fruit.getOrigin(), 
+                            fruit.getQuantity(), 
+                            fruit.getPrice() + "$");
                 }
             }
         }
@@ -137,4 +194,23 @@ public class Manager {
         }
         System.out.println("Total: " + total + "$");
     }
+
+    private boolean checkFruitExist(String name, ArrayList<Fruit> listFruit) {
+        for (Fruit fruit : listFruit) {
+            if (fruit.getName() == name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //method to add quantity to a fruit found by Id
+    private void addQuantity(int id, int quantity, ArrayList<Fruit> listFruit) {
+        for (Fruit fruit : listFruit) {
+            if (fruit.getId() == id) {
+                fruit.setQuantity(fruit.getQuantity() + quantity);
+            }
+        }
+    }
+
 }
