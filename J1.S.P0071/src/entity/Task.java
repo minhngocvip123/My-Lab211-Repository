@@ -142,4 +142,15 @@ public class Task {
     public void setExpert(String expert) {
         this.expert = expert;
     }
+    
+    public void printTask(){
+        System.out.printf("%-7s%-20s%-12s%-15s%-7s%-15s%-15s\n", 
+                id,
+                requirementName,
+                type,
+                date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                planTo - planFrom,
+                assignee,
+                expert);
+    }
 }
