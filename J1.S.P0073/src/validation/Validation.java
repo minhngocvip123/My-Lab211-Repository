@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 /**
  *
@@ -64,7 +63,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message
-    public static int getInt(String msg) {
+    public int getInt(String msg) {
         return getInt(msg,
                 "Invalid input, input must be an integer",
                 Integer.MIN_VALUE,
@@ -72,7 +71,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with custom error message
-    public static int getInt(String msg, String errorMsg) {
+    public int getInt(String msg, String errorMsg) {
         return getInt(msg,
                 errorMsg,
                 Integer.MIN_VALUE,
@@ -80,7 +79,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message and input in range
-    public static int getInt(String msg, int min, int max) {
+    public int getInt(String msg, int min, int max) {
         return getInt(msg, "Invalid input, input must be an integer", min, max);
     }
 
@@ -105,7 +104,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message
-    public static double getDouble(String msg) {
+    public double getDouble(String msg) {
         return getDouble(msg,
                 "Invalid input, input must be a real number",
                 Double.MIN_VALUE,
@@ -121,7 +120,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message and input in range
-    public static double getDouble(String msg, double min, double max) {
+    public double getDouble(String msg, double min, double max) {
         return getDouble(msg,
                 "Invalid input, input must be a real number",
                 min,
@@ -153,7 +152,7 @@ public class Validation {
         }
     }
 
-    public static String getString(String msg) {
+    public String getString(String msg) {
         return getString(msg,
                 "Invalid input, input must be string",
                 "Invalid input, input must be non-empty string",
@@ -183,8 +182,16 @@ public class Validation {
             }
         }
     }
+    
+    //get date input with default date pattern: dd-MM-yyyy
+    public LocalDate getLocalDate(String msg){
+        return getLocalDate(msg,
+                "Invalid input, input must be date with format dd-MM-yyyy!", 
+                DATE_PATTERN_IN, 
+                "Invalid date format, input must be date with format dd-MM-yyyy!");
+    }
 
-    public static String getDateString(String msg, String errorMsg, String enterFormat, String wrongFormatErrorMsg, String saveFormat) {
+    public String getDateString(String msg, String errorMsg, String enterFormat, String wrongFormatErrorMsg) {
         while (true) {
             try {
                 LocalDate date = getLocalDate(msg,
