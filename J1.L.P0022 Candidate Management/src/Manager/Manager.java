@@ -165,7 +165,7 @@ public class Manager {
         for (Experience experience : listExperience) {
             System.out.println(experience.getFirstName() + " " + experience.getLastName());
         }
-        System.out.println("==========FRESHER CANDIDATE==============");
+        System.out.println("===========FRESHER CANDIDATE==============");
         for (Fresher fresher : listFresher) {
             System.out.println(fresher.getFirstName() + " " + fresher.getLastName());
         }

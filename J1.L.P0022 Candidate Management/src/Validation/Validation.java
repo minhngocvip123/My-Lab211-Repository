@@ -28,8 +28,10 @@ public class Validation {
     public static final String PHONE_PATTERN = "^[0][0-9]{9}$";
     //This pattern matches an email address that starts with a letter, followed 
     //by word characters, an '@' symbol, and one or more sequences of word 
-    //characters optionally followed by a period, ending with a word character.
-    public static final String EMAIL_PATTERN = "^[a-zA-Z]\\w+@(\\w+.?)+(\\w)$";
+    //Email regex: The email username, which can contain letters, digits, periods, percentages, plus, and hyphen.
+    //The @ symbol followed by the domain name, which can include letters, digits, periods, and hyphens.
+    //\\.[A-Za-z]{2,6}$: The top-level domain (like .com, .net), which should be 2 to 6 letters.
+    public static final String EMAIL_PATTERN = "^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,6}$";
     //This pattern matches any string, including empty strings.
     public static final String ALL_MATCH_PATTERN = "[\\s\\S]*";
     //This pattern matches passwords that are 8 to 31 characters long and contain at least one letter and one digit

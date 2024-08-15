@@ -5,6 +5,7 @@
 package Manager;
 
 import Entity.Fruit;
+import Entity.Order;
 import Validation.Validation;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -16,8 +17,9 @@ import java.util.Hashtable;
 public class Manager {
 
     ArrayList<Fruit> listFruit = new ArrayList<>();
-    Hashtable<String, ArrayList<Fruit>> orders = new Hashtable<>();
+//    Hashtable<String, ArrayList<Fruit>> orders = new Hashtable<>();
     Validation validation = new Validation();
+    ArrayList<Order> orders = new ArrayList<>();
 
     //method to display menu
     public void displayMenu() {
@@ -44,7 +46,7 @@ public class Manager {
         while (true) {
             //testing
             displayListOfFruit(listFruit);
-            
+
             int id = validation.getInt("Enter Id: ");
             String name;
             //check id
@@ -60,14 +62,14 @@ public class Manager {
                 //add updated fruit into created fruit list
                 if (!checkFruitExist(selectedFruit.getName(), newFruits)) {
                     //if fruit is not already in add list, add fruit into add list
-                    newFruits.add(new Fruit(selectedFruit.getId(), selectedFruit.getName(), 
+                    newFruits.add(new Fruit(selectedFruit.getId(), selectedFruit.getName(),
                             selectedFruit.getPrice(), quantity, selectedFruit.getOrigin()));
                 } else {
                     //if already in the list, increase quantity
                     addQuantity(id, quantity, newFruits);
                 }
                 System.out.println("Fruit quantity added successfully!");
-            //if id is not taken, create new fruit
+                //if id is not taken, create new fruit
             } else {
                 //check fruit name
                 while (true) {
@@ -100,19 +102,23 @@ public class Manager {
      */
     public void viewOrders() {
         //check if there are no orders
-        if(orders.isEmpty()){
+        if (orders.isEmpty()) {
             System.err.println("No orders!");
             return;
         }
         //iterate through each entry in the hashtable
         //assign current key as name and iterate through each key with 
         //keySet() method to find the key-value pair
-        for(String name : orders.keySet()){
-            System.out.println("Customer: " + name);
-            ArrayList<Fruit> listOrder = orders.get(name);
-            displayListOrder(listOrder);
+//        for(String name : orders.keySet()){
+//            System.out.println("Customer: " + name);
+//            ArrayList<Fruit> listOrder = orders.get(name);
+//            displayListOrder(listOrder);
+//        }
+        for (Order order : orders) {
+            System.out.println("Customer: " + order.getCustomerName());
+            displayListOrder(order.getListOrder());
         }
-        
+
     }
 
     /**
@@ -122,6 +128,14 @@ public class Manager {
         //list to save all orders
         ArrayList<Fruit> listOrder = new ArrayList<>();
         while (true) {
+            if (listFruit.isEmpty()) {
+                System.err.println("List is empty!");
+                break;
+            } else if (checkAllFruitQuantity(listFruit) == 0) {
+                System.err.println("All fruits out of stock!");
+                break;
+            }
+
             //display fruit catalogues
             displayListOfFruit(listFruit);
             Fruit selectedFruit;
@@ -156,13 +170,17 @@ public class Manager {
                 break;
             }
         }
-        //display list order
-        displayListOrder(listOrder);
-        String customerName = validation.getString("Input your name: ");
-        //map customer name to the order and add to the hashtable
-        orders.put(customerName, listOrder);
+        //check if list order is empty
+        if (!listOrder.isEmpty()) {
+            //display list order
+            displayListOrder(listOrder);
+            String customerName = validation.getString("Input your name: ");
+            //map customer name to the order and add to the hashtable
+//        orders.put(customerName, listOrder);
+            orders.add(new Order(customerName, listOrder));
+        }
     }
-    
+
     //method to display all fruits in the list
     public void displayListOfFruit(ArrayList<Fruit> listFruit) {
         if (listFruit.isEmpty()) {
@@ -172,17 +190,17 @@ public class Manager {
             for (Fruit fruit : listFruit) {
                 //do not print out fruits with 0 quantity
                 if (fruit.getQuantity() > 0) {
-                    System.out.printf("%-10s%-20s%-15s%-15s%-15s\n", 
+                    System.out.printf("%-10s%-20s%-15s%-15s%-15s\n",
                             fruit.getId(),
-                            fruit.getName(), 
-                            fruit.getOrigin(), 
-                            fruit.getQuantity(), 
+                            fruit.getName(),
+                            fruit.getOrigin(),
+                            fruit.getQuantity(),
                             fruit.getPrice() + "$");
                 }
             }
         }
     }
-    
+
     //method to find fruit by id
     public Fruit getFruitById(int id) {
         for (Fruit fruit : listFruit) {
@@ -192,7 +210,7 @@ public class Manager {
         }
         return null;
     }
-    
+
     //method to check if fruit is already in the order list
     public Fruit checkFruitInOrder(ArrayList<Fruit> listOrder, int id) {
         for (Fruit fruit : listOrder) {
@@ -202,7 +220,7 @@ public class Manager {
         }
         return null;
     }
-    
+
     //method to display order
     private void displayListOrder(ArrayList<Fruit> listOrder) {
         double total = 0;
@@ -233,6 +251,14 @@ public class Manager {
                 fruit.setQuantity(fruit.getQuantity() + quantity);
             }
         }
+    }
+
+    private int checkAllFruitQuantity(ArrayList<Fruit> listFruit) {
+        int total = 0;
+        for (Fruit fruit : listFruit) {
+            total += fruit.getQuantity();
+        }
+        return total;
     }
 
 }
