@@ -44,13 +44,19 @@ public class Manager {
         int type = validation.getInt("Task Type: ", 1, 4);
         Task.TaskType taskType = Task.TaskType.getTypeByInt(type);
         LocalDate date = validation.getLocalDate("Date: ");
-        //plan must be from 8 - 17.5; planTo > planFrom
-        double planFrom = validation.getDouble("From: ", 8, 17.5);
+        //plan must be from 8 - 17.5; planTo > planFrom; planFrom < 16.5
+        double planFrom = validation.getDouble("From: ", 8, 16.5);
         double planTo = validation.getDouble("To: ", planFrom, 17.5);
         String assignee = validation.getString("Assignee: ");
-        String expert = validation.getString("Reviewer: ");
-        //automatically assign a new Id incrementally from the last id
-        tasks.add(new Task(++lastId, taskType, name, date, planFrom, planTo, assignee, expert));
+        if (checkAssigneeAvailable(assignee, date, planFrom, planTo)) {
+            System.err.println("Assignee is busy. Add task failed!");
+        } else {
+            String expert = validation.getString("Reviewer: ");
+            //automatically assign a new Id incrementally from the last id
+            tasks.add(new Task(++lastId, taskType, name, date, planFrom, planTo, assignee, expert));
+            System.out.println("Task added successfully!");
+        }
+
     }
 
     public void deleteTask() {
@@ -65,7 +71,9 @@ public class Manager {
             taskToDelete = getTaskById(id);
             if (taskToDelete == null) {
                 System.err.println("Task with Id(" + id + ") does not exist. Please try again!");
-            }else break;
+            } else {
+                break;
+            }
         }
         //display task details (for testing)
         System.out.printf("%-7s%-20s%-12s%-15s%-7s%-15s%-15s\n",
@@ -73,10 +81,10 @@ public class Manager {
                 "Assignee", "Reviewer");
         taskToDelete.printTask();
         //check confirmation (y=true, n=false)
-        if(validation.checkInputYN("Are you sure you want to delete this task (Y/N)? ")){
+        if (validation.checkInputYN("Are you sure you want to delete this task (Y/N)? ")) {
             tasks.remove(taskToDelete);
             System.out.println("Task deleted succesfully!");
-        }else{
+        } else {
             System.out.println("Task deletion cancelled!");
         }
 
@@ -101,20 +109,46 @@ public class Manager {
             task.printTask();
         }
     }
-    
+
     /**
      * method to return a task by Id
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public Task getTaskById(int id){
+    public Task getTaskById(int id) {
         Task taskToFind = null;
         for (Task task : tasks) {
-            if(task.getId() == id){
+            if (task.getId() == id) {
                 taskToFind = task;
             }
         }
         return taskToFind;
+    }
+
+    /**
+     * Method to check if assignee is available at a certain date and time frame
+     *
+     * @param assignee
+     * @param date
+     * @param planFrom
+     * @param planTo
+     * @return true if busy, false if not
+     */
+    private boolean checkAssigneeAvailable(String assignee, LocalDate date, double planFrom, double planTo) {
+        boolean isBusy = false;
+        for (Task task : tasks) {
+            if (task.getAssignee().equals(assignee) && task.getDate().isEqual(date)) {
+                // Check if the time frames overlap:
+                // Make sure the new task starts before the existing task ends
+                // Make sure the new task ends after the existing task starts.
+                if ((planFrom < task.getPlanTo() && planTo > task.getPlanFrom())) {
+                    isBusy = true; // Assignee is busy
+                }
+            }
+
+        }
+        return isBusy; // Assignee is available
     }
 
 }

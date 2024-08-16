@@ -174,6 +174,8 @@ public class Validation {
                 System.out.print(msg);
                 LocalDate date = LocalDate.parse(input.readLine(),
                         DateTimeFormatter.ofPattern(format));
+                
+                //if need to check past date, use date.isBefore(LocalDate.now())
                 return date;
             } catch (DateTimeParseException dateTimeParseException) {
                 System.out.println(wrongFormatErrorMsg);

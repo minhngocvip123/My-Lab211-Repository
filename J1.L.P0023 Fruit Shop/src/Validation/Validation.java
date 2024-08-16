@@ -65,7 +65,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message
-    public static int getInt(String msg) {
+    public int getInt(String msg) {
         return getInt(msg,
                 "Invalid input, input must be an integer",
                 Integer.MIN_VALUE,
@@ -81,7 +81,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message and input in range
-    public static int getInt(String msg, int min, int max) {
+    public int getInt(String msg, int min, int max) {
         return getInt(msg, "Invalid input, input must be an integer", min, max);
     }
 
@@ -106,7 +106,7 @@ public class Validation {
     }
 
     // Check user input and catch exception with default error message
-    public static double getDouble(String msg) {
+    public double getDouble(String msg) {
         return getDouble(msg,
                 "Invalid input, input must be a real number",
                 Double.MIN_VALUE,
@@ -154,7 +154,7 @@ public class Validation {
         }
     }
 
-    public static String getString(String msg) {
+    public String getString(String msg) {
         return getString(msg,
                 "Invalid input, input must be string",
                 "Invalid input, input must be non-empty string",
