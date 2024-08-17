@@ -177,7 +177,24 @@ public class Manager {
             String customerName = validation.getString("Input your name: ");
             //map customer name to the order and add to the hashtable
 //        orders.put(customerName, listOrder);
-            orders.add(new Order(customerName, listOrder));
+
+            //check if customer already exists
+            Order existingOrder = getExistingOrder(orders, customerName);
+            if (existingOrder != null) {
+                for (Fruit fruit : listOrder) {
+                    Fruit fruitInExistingOrder = checkFruitInOrder(existingOrder.getListOrder(), fruit.getId());
+                    if (fruitInExistingOrder != null) {
+                        // If fruit already exists in the existing order, increase its quantity
+                        fruitInExistingOrder.setQuantity(fruitInExistingOrder.getQuantity() + fruit.getQuantity());
+                    } else {
+                        // If not, add the fruit to the existing order
+                        existingOrder.getListOrder().add(fruit);
+                    }
+                }
+            } else {
+                // Customer doesn't exist, so create a new order
+                orders.add(new Order(customerName, listOrder));
+            }
         }
     }
 
@@ -259,6 +276,17 @@ public class Manager {
             total += fruit.getQuantity();
         }
         return total;
+    }
+
+    private Order getExistingOrder(ArrayList<Order> orders, String customerName) {
+        Order existingOrder = null;
+        for (Order order : orders) {
+            if (order.getCustomerName().equals(customerName)) {
+                existingOrder = order;
+                break;
+            }
+        }
+        return existingOrder;
     }
 
 }
